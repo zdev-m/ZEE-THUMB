@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Download YouTube thumbnails in all resolutions instantly. Free, fast, and no sign-up required." />
+  <meta name="theme-color" content="#ffffff" />
+  <title>ZEE THUMB — YouTube Thumbnail Downloader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Ambient background orbs -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="orb orb-4"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer" role="alert" aria-live="polite"></div>
+
+  <!-- ─── HEADER ─────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon" aria-hidden="true">
+          <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
+            <rect width="28" height="20" rx="5" fill="url(#logoGrad)"/>
+            <polygon points="11,6 20,10 11,14" fill="white"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="20" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FF3A3A"/>
+                <stop offset="1" stop-color="#FF7070"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">ZEE THUMB</span>
+      </div>
+      <nav class="header-nav" aria-label="Site navigation">
+        <a href="#how" class="nav-link">How it works</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ─── MAIN ──────────────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- Hero section -->
+    <section class="hero" aria-labelledby="heroHeading">
+
+      <h1 id="heroHeading" class="hero-heading">
+        YouTube Thumbnail<br />
+        <span class="heading-accent">Downloader</span>
+      </h1>
+
+      <p class="hero-sub">
+        Extract every available thumbnail from any YouTube video.<br class="desktop-br" />
+        All resolutions. One click. No watermarks.
+      </p>
+
+      <!-- Input card -->
+      <div class="input-card glass-card">
+        <div class="input-wrap">
+          <div class="input-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+          </div>
+          <input
+            type="url"
+            id="urlInput"
+            class="url-input"
+            placeholder="Paste YouTube URL here…"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false"
+            aria-label="YouTube video URL"
+          />
+          <button class="paste-btn" id="pasteBtn" aria-label="Paste from clipboard" title="Paste URL">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+            </svg>
+            Paste
+          </button>
+          <button class="clear-btn" id="clearBtn" aria-label="Clear input" title="Clear">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+        </div>
+        <button class="analyze-btn" id="analyzeBtn" aria-label="Fetch thumbnails">
+          <span class="btn-text">Fetch Thumbnails</span>
+          <span class="btn-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </span>
+          <span class="btn-loader" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <p class="input-hint">
+        Supports youtube.com/watch, youtu.be, shorts, embed, and playlist links
+      </p>
+    </section>
+
+    <!-- ─── RESULTS SECTION ──────────────────────────────── -->
+    <section class="results-section" id="resultsSection" aria-live="polite" aria-label="Thumbnail results">
+
+      <!-- Skeleton loader -->
+      <div class="skeleton-wrap" id="skeletonWrap" hidden>
+        <div class="skeleton-preview glass-card">
+          <div class="sk sk-img"></div>
+          <div class="sk-info">
+            <div class="sk sk-line w60"></div>
+            <div class="sk sk-line w40"></div>
+          </div>
+        </div>
+        <div class="skeleton-grid">
+          <div class="sk sk-card" style="--d:0"></div>
+          <div class="sk sk-card" style="--d:1"></div>
+          <div class="sk sk-card" style="--d:2"></div>
+          <div class="sk sk-card" style="--d:3"></div>
+          <div class="sk sk-card" style="--d:4"></div>
+        </div>
+      </div>
+
+      <!-- Real results -->
+      <div class="results-wrap" id="resultsWrap" hidden>
+
+        <!-- Main preview -->
+        <div class="preview-card glass-card" id="previewCard">
+          <div class="preview-img-wrap">
+            <img id="previewImg" src="" alt="YouTube thumbnail preview" loading="lazy" />
+            <div class="preview-badge" id="previewBadge">MAX RES</div>
+          </div>
+          <div class="preview-meta">
+            <div class="meta-row">
+              <div class="meta-item">
+                <span class="meta-label">Video ID</span>
+                <span class="meta-value" id="metaVideoId">—</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Best Resolution</span>
+                <span class="meta-value" id="metaResolution">—</span>
+              </div>
+              <div class="meta-item">
+                <span class="meta-label">Available Sizes</span>
+                <span class="meta-value" id="metaSizes">—</span>
+              </div>
+            </div>
+            <button class="download-all-btn" id="downloadAllBtn" aria-label="Download all thumbnails">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download All
+            </button>
+          </div>
+        </div>
+
+        <!-- Quality grid -->
+        <div class="quality-section">
+          <h2 class="quality-heading">Available Qualities</h2>
+          <div class="quality-grid" id="qualityGrid"></div>
+        </div>
+
+        <!-- Reset -->
+        <button class="reset-btn" id="resetBtn" aria-label="Search another video">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
+          </svg>
+          Search Another Video
+        </button>
+
+      </div>
+    </section>
+
+    <!-- ─── HOW IT WORKS ─────────────────────────────────── -->
+    <section class="info-section" id="how" aria-labelledby="howHeading">
+      <h2 id="howHeading" class="section-heading reveal">How it works</h2>
+      <div class="steps-grid reveal-stagger">
+        <div class="step-card glass-card">
+          <div class="step-num" aria-hidden="true">01</div>
+          <h3 class="step-title">Paste the URL</h3>
+          <p class="step-desc">Copy any YouTube video link and paste it into the input field above.</p>
+        </div>
+        <div class="step-card glass-card">
+          <div class="step-num" aria-hidden="true">02</div>
+          <h3 class="step-title">Fetch Thumbnails</h3>
+          <p class="step-desc">Click the button and we instantly extract all available quality thumbnails.</p>
+        </div>
+        <div class="step-card glass-card">
+          <div class="step-num" aria-hidden="true">03</div>
+          <h3 class="step-title">Download</h3>
+          <p class="step-desc">Preview, copy the URL, or download the thumbnail directly to your device.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FAQ ──────────────────────────────────────────── -->
+    <section class="faq-section" id="faq" aria-labelledby="faqHeading">
+      <h2 id="faqHeading" class="section-heading reveal">Frequently asked</h2>
+      <div class="faq-list reveal-stagger">
+        <details class="faq-item glass-card">
+          <summary class="faq-q">Is this tool completely free?</summary>
+          <p class="faq-a">Yes. ZEE THUMB is 100% free with no sign-up, no limits, and no hidden fees.</p>
+        </details>
+        <details class="faq-item glass-card">
+          <summary class="faq-q">What URL formats are supported?</summary>
+          <p class="faq-a">All standard YouTube formats: youtube.com/watch?v=…, youtu.be/…, youtube.com/shorts/…, embed URLs, and playlist URLs.</p>
+        </details>
+        <details class="faq-item glass-card">
+          <summary class="faq-q">Why might Max Resolution not be available?</summary>
+          <p class="faq-a">Not all videos have a maxresdefault thumbnail. In that case we automatically fall back to the next best available quality and indicate which one is shown.</p>
+        </details>
+        <details class="faq-item glass-card">
+          <summary class="faq-q">Can I use downloaded thumbnails commercially?</summary>
+          <p class="faq-a">Thumbnails are subject to YouTube's terms and the original creator's copyright. Always seek permission before commercial use.</p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── FOOTER ────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="logo-icon small" aria-hidden="true">
+          <svg width="20" height="14" viewBox="0 0 28 20" fill="none">
+            <rect width="28" height="20" rx="5" fill="url(#logoGrad2)"/>
+            <polygon points="11,6 20,10 11,14" fill="white"/>
+            <defs>
+              <linearGradient id="logoGrad2" x1="0" y1="0" x2="28" y2="20" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FF3A3A"/>
+                <stop offset="1" stop-color="#FF7070"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span>ZEE THUMB</span>
+      </div>
+      <p class="footer-copy">&copy; 2025 ZEE THUMB. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
